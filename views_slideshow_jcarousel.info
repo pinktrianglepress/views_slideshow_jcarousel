@@ -1,1 +1,5 @@
-name = Views Slideshow JCarousel
+name = Views Slideshow: JCarousel
+description = Adds a jCarousel option to views slideshow
+dependencies[] = views_slideshow
+package = Views
+core = 6.x
