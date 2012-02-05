@@ -1,3 +1,3 @@
-<li<?php print drupal_attributes($attributes); ?>>
+<li<?php print $attributes; ?>>
   <?php print $item; ?>
 </li>

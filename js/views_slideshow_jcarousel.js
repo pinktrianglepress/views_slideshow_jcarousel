@@ -1,10 +1,11 @@
 (function ($) {
-  /**
-   * Views Slideshow jCarousel Pager
-   */
+/**
+ * Views Slideshow jCarousel Pager
+ */
 
-  // Add views slieshow api calls for views slideshow jCarousel pager.
-  Drupal.behaviors.viewsSlideshowJcarouselPager = function (context) {
+// Add views slieshow api calls for views slideshow jCarousel pager.
+Drupal.behaviors.viewsSlideshowJcarouselPager = { 
+  attach: function (context) {
     // Process pause on hover.
     $('.views_slideshow_jcarousel_pager:not(.views-slideshow-jcarousel-pager-processed)', context).addClass('views-slideshow-jcarousel-pager-processed').each(function() {
       // Parse out the unique id from the full id.
@@ -30,74 +31,142 @@
         });
       });
     });
-  };
+  }
+};
 
-  Drupal.viewsSlideshowJcarouselPager = Drupal.viewsSlideshowJcarouselPager || {};
+Drupal.viewsSlideshowJcarouselPager = Drupal.viewsSlideshowJcarouselPager || {};
 
-  /**
-   * Implement the transitionBegin hook for pager jcarousel pager.
-   */
-  Drupal.viewsSlideshowJcarouselPager.transitionBegin = function (options) {
-    for(pagerLocation in Drupal.settings.viewsSlideshowPager[options.slideshowID]) {
-      if (Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].moveOnChange) {
-        Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation]['carouselObj'].scroll(options.slideNum);
-      }
+/**
+ * Implement the transitionBegin hook for pager jcarousel pager.
+ */
+Drupal.viewsSlideshowJcarouselPager.transitionBegin = function (options) {
+  for(pagerLocation in Drupal.settings.viewsSlideshowPager[options.slideshowID]) {
+    if (Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].moveOnChange) {
+      Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation]['carouselObj'].scroll(options.slideNum);
     }
-  };
+  }
+};
 
-  /**
-   * Implement the goToSlide hook for pager jcarousel pager.
-   */
-  Drupal.viewsSlideshowJcarouselPager.goToSlide = function (options) {
-    for(pagerLocation in Drupal.settings.viewsSlideshowPager[options.slideshowID]) {
-      if (Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].moveOnChange) {
-        Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].scroll(options.slideNum);
-      }
+/**
+ * Implement the goToSlide hook for pager jcarousel pager.
+ */
+Drupal.viewsSlideshowJcarouselPager.goToSlide = function (options) {
+  for(pagerLocation in Drupal.settings.viewsSlideshowPager[options.slideshowID]) {
+    if (Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].moveOnChange) {
+      Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].scroll(options.slideNum);
     }
-  };
+  }
+};
 
-  /**
-   * Implement the previousSlide hook for pager jCarousel pager.
-   */
-  Drupal.viewsSlideshowJcarouselPager.previousSlide = function (options) {
-    for(pagerLocation in Drupal.settings.viewsSlideshowPager[options.slideshowID]) {
-      // Get the current active pager.
-      var pagerNum = $('[id^="views_slideshow_jcarousel_pager_item_' + pagerLocation + '_'  + options.slideshowID + '"].active').attr('id').replace('views_slideshow_pager_field_item_' + pagerLocation + '_'  + options.slideshowID + '_', '');
+/**
+ * Implement the previousSlide hook for pager jCarousel pager.
+ */
+Drupal.viewsSlideshowJcarouselPager.previousSlide = function (options) {
+  for(pagerLocation in Drupal.settings.viewsSlideshowPager[options.slideshowID]) {
+    // Get the current active pager.
+    var pagerNum = $('[id^="views_slideshow_jcarousel_pager_item_' + pagerLocation + '_'  + options.slideshowID + '"].active').attr('id').replace('views_slideshow_pager_field_item_' + pagerLocation + '_'  + options.slideshowID + '_', '');
 
-      // If we are on the first pager then activate the last pager.
-      // Otherwise activate the previous pager.
-      if (pagerNum == 0) {
-        pagerNum = $('[id^="views_slideshow_jcarousel_pager_item_' + pagerLocation + '_'  + options.slideshowID + '"]').length() - 1;
-      }
-      else {
-        pagerNum--;
-      }
-
-      if (Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].moveOnChange) {
-        Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].scroll(pagerNum);
-      }
+    // If we are on the first pager then activate the last pager.
+    // Otherwise activate the previous pager.
+    if (pagerNum == 0) {
+      pagerNum = $('[id^="views_slideshow_jcarousel_pager_item_' + pagerLocation + '_'  + options.slideshowID + '"]').length() - 1;
     }
-  };
-
-  /**
-   * Implement the nextSlide hook for pager jcarousel pager.
-   */
-  Drupal.viewsSlideshowJcarouselPager.nextSlide = function (options) {
-    for(pagerLocation in Drupal.settings.viewsSlideshowPager[options.slideshowID]) {
-      // Get the current active pager.
-      var pagerNum = $('[id^="views_slideshow_jcarousel_pager_item_' + pagerLocation + '_'  + options.slideshowID + '"].active').attr('id').replace('views_slideshow_jcarousel_pager_item_' + pagerLocation + '_'  + options.slideshowID + '_', '');
-      var totalPagers = $('[id^="views_slideshow_jcarousel_pager_item_' + pagerLocation + '_'  + options.slideshowID + '"]').length();
-
-      // If we are on the last pager then activate the first pager.
-      // Otherwise activate the next pager.
-      pagerNum++;
-      if (pagerNum == totalPagers) {
-        pagerNum = 0;
-      }
-
-      if (Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].moveOnChange) {
-        Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].scroll(pagerNum);
-      }
+    else {
+      pagerNum--;
     }
-  };
+
+    if (Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].moveOnChange) {
+      Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].scroll(pagerNum);
+    }
+  }
+};
+
+/**
+ * Implement the nextSlide hook for pager jcarousel pager.
+ */
+Drupal.viewsSlideshowJcarouselPager.nextSlide = function (options) {
+  for(pagerLocation in Drupal.settings.viewsSlideshowPager[options.slideshowID]) {
+    // Get the current active pager.
+    var pagerNum = $('[id^="views_slideshow_jcarousel_pager_item_' + pagerLocation + '_'  + options.slideshowID + '"].active').attr('id').replace('views_slideshow_jcarousel_pager_item_' + pagerLocation + '_'  + options.slideshowID + '_', '');
+    var totalPagers = $('[id^="views_slideshow_jcarousel_pager_item_' + pagerLocation + '_'  + options.slideshowID + '"]').length();
+
+    // If we are on the last pager then activate the first pager.
+    // Otherwise activate the next pager.
+    pagerNum++;
+    if (pagerNum == totalPagers) {
+      pagerNum = 0;
+    }
+
+    if (Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].moveOnChange) {
+      Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].scroll(pagerNum);
+    }
+  }
+};Drupal.viewsSlideshowJcarouselPager = Drupal.viewsSlideshowJcarouselPager || {};
+
+/**
+ * Implement the transitionBegin hook for pager jcarousel pager.
+ */
+Drupal.viewsSlideshowJcarouselPager.transitionBegin = function (options) {
+  for(pagerLocation in Drupal.settings.viewsSlideshowPager[options.slideshowID]) {
+    if (Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].moveOnChange) {
+      Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation]['carouselObj'].scroll(options.slideNum);
+    }
+  }
+};
+
+/**
+ * Implement the goToSlide hook for pager jcarousel pager.
+ */
+Drupal.viewsSlideshowJcarouselPager.goToSlide = function (options) {
+  for(pagerLocation in Drupal.settings.viewsSlideshowPager[options.slideshowID]) {
+    if (Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].moveOnChange) {
+      Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].scroll(options.slideNum);
+    }
+  }
+};
+
+/**
+ * Implement the previousSlide hook for pager jCarousel pager.
+ */
+Drupal.viewsSlideshowJcarouselPager.previousSlide = function (options) {
+  for(pagerLocation in Drupal.settings.viewsSlideshowPager[options.slideshowID]) {
+    // Get the current active pager.
+    var pagerNum = $('[id^="views_slideshow_jcarousel_pager_item_' + pagerLocation + '_'  + options.slideshowID + '"].active').attr('id').replace('views_slideshow_pager_field_item_' + pagerLocation + '_'  + options.slideshowID + '_', '');
+
+    // If we are on the first pager then activate the last pager.
+    // Otherwise activate the previous pager.
+    if (pagerNum == 0) {
+      pagerNum = $('[id^="views_slideshow_jcarousel_pager_item_' + pagerLocation + '_'  + options.slideshowID + '"]').length() - 1;
+    }
+    else {
+      pagerNum--;
+    }
+
+    if (Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].moveOnChange) {
+      Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].scroll(pagerNum);
+    }
+  }
+};
+
+/**
+ * Implement the nextSlide hook for pager jcarousel pager.
+ */
+Drupal.viewsSlideshowJcarouselPager.nextSlide = function (options) {
+  for(pagerLocation in Drupal.settings.viewsSlideshowPager[options.slideshowID]) {
+    // Get the current active pager.
+    var pagerNum = $('[id^="views_slideshow_jcarousel_pager_item_' + pagerLocation + '_'  + options.slideshowID + '"].active').attr('id').replace('views_slideshow_jcarousel_pager_item_' + pagerLocation + '_'  + options.slideshowID + '_', '');
+    var totalPagers = $('[id^="views_slideshow_jcarousel_pager_item_' + pagerLocation + '_'  + options.slideshowID + '"]').length();
+
+    // If we are on the last pager then activate the first pager.
+    // Otherwise activate the next pager.
+    pagerNum++;
+    if (pagerNum == totalPagers) {
+      pagerNum = 0;
+    }
+
+    if (Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].moveOnChange) {
+      Drupal.settings.viewsSlideshowJCarouselPager[options.slideshowID][pagerLocation].scroll(pagerNum);
+    }
+  }
+};
 })(jQuery);

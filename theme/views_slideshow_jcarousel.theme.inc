@@ -26,10 +26,11 @@ function _views_slideshow_jcarousel_preprocess_pager(&$vars) {
   );
 
   // Add the settings to the page.
-  drupal_add_js($js_vars, 'setting');
+  drupal_add_js($js_vars, array('type' => 'setting', 'scope' => JS_DEFAULT));
 
   // Add our class to the wrapper.
-  $vars['attributes']['class'] = (isset($vars['attributes']['class'])) ? $vars['attributes']['class'] . ' views_slideshow_jcarousel_pager jcarousel-skin-' . $vars['settings']['views_slideshow_jcarousel_pager_skin'] : 'views_slideshow_jcarousel_pager jcarousel-skin-' . $vars['settings']['views_slideshow_jcarousel_pager_skin'];
+  $vars['attributes_array']['class'] = (isset($vars['attributes_array']['class'])) ? $vars['attributes_array']['class'] . ' views_slideshow_jcarousel_pager jcarousel-skin-' . $vars['settings']['views_slideshow_jcarousel_pager_skin'] : 'views_slideshow_jcarousel_pager jcarousel-skin-' . $vars['settings']['views_slideshow_jcarousel_pager_skin'];
+  $vars['attributes_array']['id'] = 'widget_pager_' . $vars['location'] . '_' . $vars['vss_id'];
 
   // Render all the fields unless there is only 1 slide and the user specified
   // to hide them when there is only one slide.
@@ -39,10 +40,10 @@ function _views_slideshow_jcarousel_preprocess_pager(&$vars) {
       $rendered_fields = '';
       foreach ($vars['settings']['views_slideshow_jcarousel_pager_fields'] as $field => $use) {
         if ($use !== 0 && is_object($vars['view']->field[$field])) {
-          $rendered_fields .= theme('views_slideshow_jcarousel_pager_field', $vars['view'], $field, $count);
+          $rendered_fields .= theme('views_slideshow_jcarousel_pager_field', array('view' => $vars['view'], 'field' => $field, 'count' => $count));
         }
       }
-      $vars['rendered_field_items'] .= theme('views_slideshow_jcarousel_pager_item', $vars['vss_id'], $rendered_fields, $count, $vars['location']);
+      $vars['rendered_field_items'] .= theme('views_slideshow_jcarousel_pager_item', array('vss_id' => $vars['vss_id'], 'item' => $rendered_fields, 'count' => $count, 'location' => $vars['location']));
     }
 
     if (module_exists('libraries')) {
@@ -75,6 +76,6 @@ function _views_slideshow_jcarousel_preprocess_pager_item(&$vars) {
   }
   $classes[] = ($vars['count'] % 2) ? 'views-row-even' : 'views-row-odd';
 
-  $vars['attributes']['class'] = implode(' ', $classes);
-  $vars['attributes']['id'] = 'views_slideshow_jcarousel_pager_item_' . $vars['location'] . '_' . $vars['vss_id'] . '_' . $vars['count'];
+  $vars['attributes_array']['class'] = implode(' ', $classes);
+  $vars['attributes_array']['id'] = 'views_slideshow_jcarousel_pager_item_' . $vars['location'] . '_' . $vars['vss_id'] . '_' . $vars['count'];
 }
