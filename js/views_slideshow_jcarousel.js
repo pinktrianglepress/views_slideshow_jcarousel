@@ -22,7 +22,8 @@ Drupal.behaviors.viewsSlideshowJcarouselPager = {
         animation: (isNaN(Drupal.settings.viewsSlideshowJCarouselPager[uniqueID][location].animation)) ? Drupal.settings.viewsSlideshowJCarouselPager[uniqueID][location].animation : parseInt(Drupal.settings.viewsSlideshowJCarouselPager[uniqueID][location].animation),
         initCallback: function(carousel) {
           Drupal.settings.viewsSlideshowJCarouselPager[uniqueID][location]['carouselObj'] = carousel;
-        }
+        },
+				itemFallbackDimension:620,
       });
 
       $(this).find('.jcarousel-item').each(function(index, pagerItem) {
